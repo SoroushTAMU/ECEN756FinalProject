@@ -1,4 +1,4 @@
-from utils import argmax_of_list, argmin_of_list, get_arg
+from utils import argmax_of_list, argmin_of_list, get_arg, lists_are_equal
 import random
 import math
 
@@ -25,15 +25,15 @@ def iterative_plurality(L, m, tiebraking="Lexicographical", from_truth=False, in
         votes = [preference_profile[0] for preference_profile in L]
     else:
         if initial_state:
-            votes = initial_state
+            votes = initial_state.copy()
         else:
             votes = [random.randint(0,m-1) for preference_profile in L]
         
-
-    
     num_iterations = 0
     convergence = False
     num_unchanged_votes = 0
+
+    num_loops = 0
     while not convergence:
         for voter, preference_profile in enumerate(L):
             #print(votes)
@@ -56,10 +56,11 @@ def iterative_plurality(L, m, tiebraking="Lexicographical", from_truth=False, in
             else:
                 num_unchanged_votes = 0
             
+            num_loops += 1
             if num_unchanged_votes == len(votes):
                 convergence = True
     
-    return votes, get_num_votes(votes, m), get_winner(votes, tiebraking), num_iterations-len(votes)
+    return votes, get_num_votes(votes, m), get_winner(votes, tiebraking), num_iterations
 
 
 
@@ -94,11 +95,11 @@ def RCR_iterative_plurality(L, m, tiebraking="Lexicographical", from_truth=False
             votes = [random.randint(0,m-1) for preference_profile in L]
         
 
-    
     num_iterations = 0
     convergence = False
     num_unchanged_votes = 0
     viable_candidates = [*range(m)]
+    num_loops = 0
 
     while not convergence:
         for voter, preference_profile in enumerate(L):
@@ -132,9 +133,11 @@ def RCR_iterative_plurality(L, m, tiebraking="Lexicographical", from_truth=False
         loser = get_loser_RCR(get_num_votes(votes, m), tiebraking, viable_candidates)
         viable_candidates.remove(loser)
 
+        num_loops += 1
         if len(viable_candidates) == 1:
             break
     
+
     return votes, get_num_votes(votes, m), get_winner(votes, tiebraking), num_iterations
 
 
