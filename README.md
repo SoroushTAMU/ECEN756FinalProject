@@ -4,5 +4,6 @@ Soroush Famili
 Paper included in repository (ICR Paper.pdf)
 
 ## Run using conda
-conda create --name <env> --file requirements.txt
+conda create --name IRC --file requirements.txt
 
+Then run src/simulation.ipynb
